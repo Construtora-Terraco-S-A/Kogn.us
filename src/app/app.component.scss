@@ -1,0 +1,19 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Opcional: background-color: #121212; se você quiser um fundo escuro para toda a aplicação */
+}
+
+.app-content {
+  flex-grow: 1; /* Permite que o conteúdo principal (router-outlet) ocupe todo o espaço restante */
+  background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #1e3a8a 100%);
+  transition: all 0.2s ease-in-out; /* Opcional: Adicione padding se o conteúdo estiver muito colado nas bordas */
+  padding-top: 5%;
+}
+
+// app-header {
+//   background-color: #333;
+//   color: white;
+//   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+// }
