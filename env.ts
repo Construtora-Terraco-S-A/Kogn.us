@@ -1,3 +1,3 @@
-const apiUrl: string = 'https://example.com/api';
+const apiUrl: string = 'https://kognus.lucashp.com.br';
 
 export { apiUrl };

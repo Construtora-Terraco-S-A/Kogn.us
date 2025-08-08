@@ -14,6 +14,7 @@ import { calendarPtBr } from './utils/calendar_pt-br';
 import { providePrimeNG } from 'primeng/config';
 import { definePreset } from '@primeng/themes';
 import Lara from '@primeng/themes/lara';
+import { HttpInterceptor } from './core/interceptors/interceptor.service';
 
 const MyPreset = definePreset(Lara, {
   semantic: {
@@ -40,7 +41,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideAnimations(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([HttpInterceptor])),
     { provide: LOCALE_ID, useValue: 'pt-BR' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
     providePrimeNG({
