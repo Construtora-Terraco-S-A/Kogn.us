@@ -1,5 +1,8 @@
 <nav class="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-lg border-b border-white/10">
     <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl transform -translate-y-1/2">
+        </div>
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center gap-2.5">
                 <img
@@ -22,9 +25,50 @@
                 </button>
             </div>
             <div class="hidden lg:flex items-center gap-4">
-                <button>Entrar</button>
-                <button>Criar Conta</button>
+                <button (click)="showLoginModal()" class="items-center justify-center rounded-md text-sm font-medium ring-offset-background h-10 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5">Entrar</button>
+                <button routerLink="/register" class="items-center justify-center rounded-md text-sm font-medium ring-offset-background bg-primary hover:bg-primary/90 h-10 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">Criar Conta</button>
             </div>
         </div>
     </div>
 </nav>
+
+<p-dialog maskStyleClass="backdrop-blur-sm" [(visible)]="visibleLoginModal" styleClass="!border-0 !bg-transparent">
+    <ng-template #headless>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div
+                class="flex flex-col px-8 py-8 gap-8 rounded-2xl"
+                style="background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #1e3a8a 100%);"
+            >
+                <div class="inline-flex flex-col gap-2">
+                    <label for="username" class="text-primary-50 font-semibold">Nome de usuário</label>
+                    <input pInputText formControlName="email" id="username" class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80" />
+                </div>
+                <div class="inline-flex flex-col gap-2">
+                    <label for="password" class="text-primary-50 font-semibold">Senha</label>
+                    <input pInputText formControlName="senha"
+                        id="password"
+                        class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80"
+                        type="password"
+                    />
+                </div>
+                <div class="flex items-center gap-4">
+                    <p-button
+                        label="Cancelar"
+                        (click)="hideLoginModal()"
+                        [text]="true"
+                        styleClass="!p-3 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"
+                        class="w-full"
+                    />
+                    <p-button
+                        label="Entrar"
+                        (click)="login()"
+                        [text]="true"
+                        styleClass="!p-3 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"
+                        class="w-full"
+                    />
+                    <p-button (onClick)="teste()"></p-button>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+</p-dialog>
