@@ -1,12 +1,12 @@
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component } from "@angular/core";
 import { Router, RouterModule } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { AuthService, LoadingService } from '../../core';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-header',
@@ -30,9 +30,7 @@ export class Header {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly cookieService: CookieService
-  ) {
-
-  }
+  ) {}
 
   public loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
@@ -47,21 +45,15 @@ export class Header {
     this.visibleLoginModal = false;
   }
 
-  teste(){
-    console.log(this.loginForm.value);
-  }
-
   public login(): any {
     this.loadingService.show();
     this.authService.login(this.loginForm.value.email, this.loginForm.value.senha).subscribe({
       next: (response: any) => {
-        //console.log("🚀 ~ LoginComponent ~ this.session.login ~ response:", response)
-        
-          localStorage.setItem('session', JSON.stringify(response));
-          this.cookieService.set('token', encodeURIComponent(response.access_token), { path: '/' });
-          this.router.navigate(['/home']);
-        
+        localStorage.setItem('session', JSON.stringify(response));
+        this.cookieService.set('token', encodeURIComponent(response.access_token), { path: '/' });
+        this.hideLoginModal();
         this.loadingService.hide();
+        this.router.navigate(['/']);
       },
       error: (error) => {
         console.error(error);

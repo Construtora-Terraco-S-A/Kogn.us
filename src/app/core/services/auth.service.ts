@@ -30,8 +30,8 @@ export class AuthService implements OnDestroy {
     window.removeEventListener('storage', this.syncAuthStatus.bind(this));
   }
 
-  login(email: string, senha: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, { email, senha }).pipe(
+  login(usuario: string, senha: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login`, { usuario, senha }).pipe(
       tap((response: any) => {
         if (typeof localStorage !== 'undefined') { // Verifica se está no navegador
           localStorage.setItem('session', JSON.stringify(response));
