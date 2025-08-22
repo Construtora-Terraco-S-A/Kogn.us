@@ -1,8 +1,5 @@
-<nav class="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-lg border-b border-white/10">
+<nav class="bg-gradient-to-r from-purple-500/10 transform w-full bg-black/20 backdrop-blur-lg border-b border-white/10">
     <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-            class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl transform -translate-y-1/2">
-        </div>
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center gap-2.5">
                 <img
@@ -17,9 +14,10 @@
             </div>
 
             <div class="hidden lg:flex items-center space-x-1">
-                <button class="px-3 py-2 rounded-lg transition-all text-sm font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30'">
+                <button routerLink="/" class="px-3 py-2 rounded-lg transition-all text-sm font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30'">
                     Home
                 </button>
+                <!-- routerLink="/generate-content" -->
                 <button class="px-3 py-2 rounded-lg transition-all text-sm font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30'">
                     Gerar conteúdo
                 </button>
@@ -32,16 +30,24 @@
     </div>
 </nav>
 
-<p-dialog maskStyleClass="backdrop-blur-sm" [(visible)]="visibleLoginModal" styleClass="!border-0 !bg-transparent">
+<p-toast key="toastr" [showTransitionOptions]="'250ms'" [showTransformOptions]="'translateX(100%)'" [hideTransitionOptions]="'150ms'" [hideTransformOptions]="'translateX(100%)'" />
+<p-dialog maskStyleClass="backdrop-blur-sm" [(visible)]="visibleLoginModal" (onHide)="hideLoginModal()" styleClass="!border-0 !bg-transparent">
     <ng-template #headless>
-        <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div
                 class="flex flex-col px-8 py-8 gap-8 rounded-2xl"
                 style="background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #1e3a8a 100%);"
             >
                 <div class="inline-flex flex-col gap-2">
                     <label for="username" class="text-primary-50 font-semibold">Nome de usuário</label>
-                    <input pInputText formControlName="email" id="username" class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80" />
+                    <input pInputText formControlName="email" 
+                        id="username" 
+                        class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80"
+                        [invalid]="isInvalid('email')"
+                    />
+                    @if (isInvalid('email')) {
+                        <p-message severity="error" size="small" variant="simple">Nome do usuário é obrigatório.</p-message>
+                    }
                 </div>
                 <div class="inline-flex flex-col gap-2">
                     <label for="password" class="text-primary-50 font-semibold">Senha</label>
@@ -49,7 +55,11 @@
                         id="password"
                         class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80"
                         type="password"
+                        [invalid]="isInvalid('senha')"
                     />
+                    @if (isInvalid('senha')) {
+                        <p-message severity="error" size="small" variant="simple">Senha é obrigatório.</p-message>
+                    }
                 </div>
                 <div class="flex items-center gap-4">
                     <p-button
@@ -61,6 +71,7 @@
                     />
                     <p-button
                         label="Entrar"
+                        [disabled]="loginForm.invalid"
                         (click)="login()"
                         [text]="true"
                         styleClass="!p-3 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"

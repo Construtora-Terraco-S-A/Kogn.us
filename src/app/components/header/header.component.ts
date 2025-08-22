@@ -6,6 +6,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
 import { AuthService, LoadingService } from '../../core';
 
 @Component({
@@ -17,13 +19,17 @@ import { AuthService, LoadingService } from '../../core';
     ButtonModule,
     RouterModule,
     PasswordModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MessageModule,
+    ToastModule
   ],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
 export class Header {
+
   visibleLoginModal: boolean = false;
+  loginFormSubmitted: boolean = false;
 
   constructor(
     private readonly loadingService:  LoadingService,
@@ -32,17 +38,31 @@ export class Header {
     private readonly cookieService: CookieService
   ) {}
 
-  public loginForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
-    senha: new FormControl('', [Validators.required])
-  });
-
   showLoginModal() {
     this.visibleLoginModal = true;
   }
 
   hideLoginModal() {
     this.visibleLoginModal = false;
+  }
+
+  public loginForm: FormGroup = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    senha: new FormControl('', [Validators.required])
+  });
+
+  isInvalid(controlName: string) {
+    const control = this.loginForm.get(controlName);
+    return control?.invalid && (control.touched || this.loginFormSubmitted);
+  }
+
+  onSubmit() {
+    // this.loginFormSubmitted = true;
+    // if (this.loginForm.valid) {
+    //   this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Form Submitted', life: 3000 });
+    //   this.loginForm.reset();
+    //   this.loginFormSubmitted = false;
+    // }
   }
 
   public login(): any {
@@ -57,7 +77,6 @@ export class Header {
       },
       error: (error) => {
         console.error(error);
-        this.loadingService.notify("Erro!", error.error.message);
         this.loadingService.hide();
       }
     });
