@@ -1,4 +1,4 @@
-<div class="max-w-6xl mx-auto">
+<section>
     <div class="text-center mb-16">
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
             Escolha o plano perfeito para <span class="text-purple-400">você</span>
@@ -7,40 +7,51 @@
             Comece com 7 dias grátis no plano anual. Cancele quando quiser.
         </p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg text-slate-50 shadow-sm h-full flex flex-col">
-            <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg text-slate-50 shadow-sm h-full flex flex-col">
-                <div class="flex flex-col space-y-1.5 p-6 text-center pt-10">
-                    <h3 class="font-semibold tracking-tight text-2xl">Mensal</h3>
-                    <p class="text-sm text-slate-400">
-                        <span class="text-5xl font-bold text-white">R$69</span>
-                        <span class="text-gray-400">/mês</span>
-                    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 gap-y-0 max-w-4xl mx-auto">
+        @for (plano of planos; track $index) {
+            @if (+plano.valor_mensal > 0){
+                
+                <div [class.border-purple-500]="plano.mais_popular" 
+                    class="relative rounded-xl border p-6 border-white/10 bg-white/5 backdrop-blur-lg text-slate-50 shadow-sm h-full flex flex-col">
+                    @if (plano.mais_popular){
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-2">
+                            <i class="pi pi-star text-white text-lg"></i>
+                            <span>Mais popular</span>
+                        </div>
+                    }
+                    <div class="flex flex-col pb-7 text-center ">
+                        <h3 class="font-semibold tracking-tight text-2xl">{{plano.nome}}</h3>
+                        <p class="text-sm text-slate-400">
+                            <span class="text-5xl font-bold text-white">R${{+plano.valor_mensal}}</span>
+                            <span class="text-gray-400">/mês</span>
+                        </p>
+                    </div>
+                    <div class="grid gap-4">
+                        <ul class="space-y-4">
+                            @for(recursos of plano.recursos; track $index ){
+                            <li class="flex items-start gap-3">
+                                <i class="pi pi-check-circle text-green-400 text-lg"></i>
+                                @if(recursos.quantidade > -1){
+                                    <span>{{recursos.quantidade}} {{recursos.nome}}/mês</span>
+                                }@else {
+                                    <span>{{recursos.nome}} Ilimitado</span>
+                                }
+                            </li>
+                        }
+                        </ul>
+                        <button class="flex justify-center items-center h-3 w-full text-lg py-6 rounded-lg" [ngClass]="plano.mais_popular ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90' : 'bg-slate-700 hover:bg-slate-600'">
+                            <span class="text-sm">Começar agora</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="p-6 pt-0 flex-grow">
-                    <ul class="space-y-4">
-                        <li class="flex items-start gap-3">
-                            <i class="pi pi-check-circle text-green-400" style="font-size: 1.25rem;"></i>
-                            <span>50 uploads de fontes/mês</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="pi pi-check-circle text-green-400" style="font-size: 1.25rem;"></i>
-                            <span>100 materiais gerados/mês</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="pi pi-check-circle text-green-400" style="font-size: 1.25rem;"></i>
-                            <span>Todos os tipos de conteúdo</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="pi pi-check-circle text-green-400" style="font-size: 1.25rem;"></i>
-                            <span>Salas de Aula (até 5 membros)</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+            }
+        }
+        @if(freeplan){
+            <a href="" class="text-white text-sm">Continuar com plano gratuito</a>
+        }
     </div>
-
-
-
-</div>
+        
+    <div class="flex justify-center mt-6">
+        <span class="text-gray-400">Todos os planos incluem acesso ao Feed da Comunidade, Meus Cadernos e suporte prioritário.</span>
+    </div>
+</section>
