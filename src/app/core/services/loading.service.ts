@@ -26,7 +26,12 @@ export class LoadingService {
     return this._loading.asObservable();
   }
 
-  notify(titulo: string = "Aviso!", mensagem: string = "Não foi possível fazer o download!", redirect?: any, func?: any) {
+  notify(
+    titulo: string = "Aviso!", 
+    mensagem: string = "Não foi possível fazer o download!", 
+    redirect?: any, 
+    func?: any
+  ) {
     this.messageService.clear();
     this.messageService.add({
       key: 'block2',
@@ -41,7 +46,11 @@ export class LoadingService {
     this.hide();
   }
 
-  toastr(titulo: string = "Aviso!", mensagem: string = "Não foi possível fazer o download!", severity: string = 'success') {
+  toastr(
+    titulo: string = "Aviso!",
+    mensagem: string = "Não foi possível fazer o download!", 
+    severity: string = 'success'
+  ) {
     this.messageService.clear();
     this.messageService.add({
       key: 'toastr',

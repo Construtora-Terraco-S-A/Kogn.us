@@ -4,3 +4,126 @@
     <router-outlet />
   </main>
 </div>
+
+@if(isNotify){
+<div class="loading"></div>
+}
+
+@if(isLoading){
+<div class="loading">
+    <p-progressSpinner class="w-4rem h-4rem" strokeWidth="8" animationDuration=".5s"></p-progressSpinner>
+</div>
+}
+
+<p-toast key="block2" [preventOpenDuplicates]="true" (onClose)="clear('block2')" [position]="'center'" [baseZIndex]="999999999999" class="toast-noti" [life]="99999">
+    <ng-template let-message #message>
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+            role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+            <div>
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                  @switch (message.summary){
+                    @case ('Sucesso!') {
+                      <i class="pi pi-check-circle"></i>
+                    }
+                    @case ('Erro!') {
+                      <i class="pi pi-times text-red-600"></i>
+                    }
+                    @default {
+                      <i class="pi pi-info-circle"></i>
+                    }
+                  }
+                </div>
+                <div class="mt-3 text-center sm:mt-5">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                        <b>{{message.summary}}</b>
+                        
+                    </h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">
+                           {{message.detail}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            @if (message.redirect && message.func) {
+              <div class="mt-5 sm:mt-6">
+                <button type="button" pButton pRipple class="w-full" severity="danger" label="OK"
+                  (click)="message.func ? message.func() : clear('block2')"
+                  [routerLink]="message.redirect || ''">
+                </button>
+              </div>
+            }
+            @if(!message.redirect && message.func) {
+              <div class="mt-5 sm:mt-6">
+                <button type="button" pButton pRipple severity="danger" label="OK"
+                  (click)="message.func ? message.func() : clear('block2')">
+                </button>
+              </div>
+            }
+        </div>
+      </div>
+    </ng-template>
+</p-toast>
+
+<!-- <p-toast key="toastr" 
+    [showTransitionOptions]="'250ms'" 
+    [showTransformOptions]="'translateX(100%)'" 
+    [hideTransitionOptions]="'150ms'" 
+    [hideTransformOptions]="'translateX(100%)'"
+/> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="flex align-items-center flex-1 align-self-center w-full bg-toast">
+            <div class="w-full border-round-2xl">
+                <div
+                    class="flex justify-content-center align-items-center border-bottom-1 border-gray-300 py-2 gap-1 w-full">
+                    <b>{{message.summary}}</b>
+                    @switch (message.summary){
+                    @case ('Sucesso!') {
+                    <i class="pi pi-check-circle"></i>
+                    }
+                    @case ('Erro!') {
+                    <i class="pi pi-times-circle"></i>
+                    }
+                    @default {
+                    <i class="pi pi-info-circle"></i>
+                    }
+                    }
+                </div>
+                <div class="p-3 text-center w-full">
+                    <p class="text-600 mt-2 mb-6 " style="overflow-wrap: anywhere;">{{message.detail}}</p>
+                    @if (message.redirect) {
+                    <button type="button" pButton pRipple class="p-button-sm mr-2 notification-button" label="OK"
+                        (click)="message.func ? message.func() : clear('block2')"
+                        routerLink="{{message.redirect || ''}}"></button>
+                    }
+                    @else {
+                    <button type="button" pButton pRipple class="p-button-sm mr-2 notification-button" label="OK"
+                        (click)="message.func ? message.func() : clear('block2')"></button>
+                    }
+                </div>
+            </div>
+        </div> -->

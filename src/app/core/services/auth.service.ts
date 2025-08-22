@@ -42,7 +42,8 @@ export class AuthService implements OnDestroy {
       }),
       catchError((error) => {
         console.error("Erro no login:", error);
-        this.loadingService.notify("Erro!", error.error.message || "Ocorreu um erro ao fazer login.");
+        this.loadingService.toastr("Erro!", error.error.message || "Ocorreu um erro ao fazer login.", "error",);
+        // this.loadingService.notify("Erro!", error.error.message || "Ocorreu um erro ao fazer login.", [], "error" )
         return throwError(() => error); // Propaga o erro para quem subscrever, se necessário
       })
     );
