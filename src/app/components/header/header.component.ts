@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router, RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,6 +8,8 @@ import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { Popover, PopoverModule } from 'primeng/popover';
+import { DividerModule } from 'primeng/divider';
 import { AuthService, LoadingService } from '../../core';
 
 @Component({
@@ -21,15 +23,32 @@ import { AuthService, LoadingService } from '../../core';
     PasswordModule,
     ReactiveFormsModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    PopoverModule,
+    DividerModule
   ],
   templateUrl: './header.html',
-  styleUrl: './header.scss'
+  styleUrl: './header.scss',
+  encapsulation: ViewEncapsulation.None,
 })
-export class Header {
+export class Header implements OnInit {
 
+  @ViewChild(Popover) op!: Popover;
   visibleLoginModal: boolean = false;
+  visibleMenuPopover: boolean = false;
   loginFormSubmitted: boolean = false;
+  isLogged: boolean = false;
+  me: any = {};
+  routerMenu: any = [
+    { label: 'Home', icon: 'pi pi-fw pi-home', routerLink: '/' },
+    { label: 'Notas', icon: 'pi pi-fw pi-book', routerLink: '/notas' },
+    { label: 'Desempenho', icon: 'pi pi-fw pi-chart-bar', routerLink: '/desempenho' },
+    { label: 'Agenda', icon: 'pi pi-fw pi-calendar', routerLink: '/calendario'},
+    { label: 'Curriculo', icon: 'pi pi-fw pi-file', routerLink: '/curriculo'},
+    { label: 'Correção', icon: 'pi pi-fw pi-pencil', routerLink: '/correcao'},
+    { label: 'Configurações', icon: 'pi pi-fw pi-cog', routerLink: '/configuracoes' }
+  ];
+
 
   constructor(
     private readonly loadingService:  LoadingService,
@@ -38,12 +57,15 @@ export class Header {
     private readonly cookieService: CookieService
   ) {}
 
-  showLoginModal() {
-    this.visibleLoginModal = true;
+  toggle(event: Event) {
+    this.op.toggle(event);
   }
 
-  hideLoginModal() {
-    this.visibleLoginModal = false;
+  ngOnInit(): void {
+    this.isLogged = this.loggedIn();
+    if(this.isLogged){
+      this.dados();
+    }
   }
 
   public loginForm: FormGroup = new FormGroup({
@@ -71,9 +93,10 @@ export class Header {
       next: (response: any) => {
         localStorage.setItem('session', JSON.stringify(response));
         this.cookieService.set('token', encodeURIComponent(response.access_token), { path: '/' });
-        this.hideLoginModal();
+        this.visibleLoginModal = false;
         this.loadingService.hide();
         this.router.navigate(['/']);
+        this.loggedIn();
       },
       error: (error) => {
         console.error(error);
@@ -81,4 +104,44 @@ export class Header {
       }
     });
   }
+
+  private loggedIn(): any {
+    this.loadingService.show();
+    if (this.cookieService.get('token')) {
+      this.loadingService.hide();
+      return this.loggedIn;
+    } else {
+      this.loadingService.hide();
+      return this.loggedIn;
+    }
+  }
+
+  public logout(): any {
+    this.loadingService.show();
+    localStorage.removeItem('session');
+    this.cookieService.delete('token');
+    this.loadingService.hide();
+    this.router.navigate(['/']);
+    this.loggedIn();
+    // this.authService.logout().subscribe({
+    //   next: (response: any) => {
+    //     localStorage.removeItem('session');
+    //     this.cookieService.delete('token');
+    //     this.loadingService.hide();
+    //     this.router.navigate(['/']);
+    //     this.loggedIn();
+    //   },
+    //   error: (error) => {},
+    //   complete: () => {
+    //     this.loadingService.hide();
+    //   }
+    // });
+  }
+
+  public dados(): any {
+    const session = JSON.parse(localStorage.getItem('session') ?? '{}');
+    const user = session?.usuario || {};
+    return this.me = user;
+  }
+
 }

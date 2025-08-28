@@ -23,15 +23,24 @@
                 </button>
             </div>
             <div class="hidden lg:flex items-center gap-4">
-                <button (click)="showLoginModal()" class="items-center justify-center rounded-md text-sm font-medium ring-offset-background h-10 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5">Entrar</button>
-                <button routerLink="/register" class="items-center justify-center rounded-md text-sm font-medium ring-offset-background bg-primary hover:bg-primary/90 h-10 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">Criar Conta</button>
+                <!-- @if (isLogged) {  -->
+                    <div class="inline-flex cursor-pointer items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground relative h-10 w-10 rounded-full p-0"
+                        (click)="toggle($event)" type="button">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: rgb(139, 92, 246);">
+                            <i class="pi pi-sparkles text-white"></i>
+                        </div>
+                    </div>
+                <!-- }@else{ -->
+                    <button (click)="visibleLoginModal = true" class="items-center justify-center rounded-md text-sm font-medium ring-offset-background h-10 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5">Entrar</button>
+                    <button routerLink="/register" class="items-center justify-center rounded-md text-sm font-medium ring-offset-background bg-primary hover:bg-primary/90 h-10 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">Criar Conta</button>
+                <!-- } -->
             </div>
         </div>
     </div>
 </nav>
 
 <p-toast key="toastr" [showTransitionOptions]="'250ms'" [showTransformOptions]="'translateX(100%)'" [hideTransitionOptions]="'150ms'" [hideTransformOptions]="'translateX(100%)'" />
-<p-dialog maskStyleClass="backdrop-blur-sm" [(visible)]="visibleLoginModal" (onHide)="hideLoginModal()" styleClass="!border-0 !bg-transparent">
+<p-dialog maskStyleClass="backdrop-blur-sm" [(visible)]="visibleLoginModal" (onHide)="visibleLoginModal = false" styleClass="!border-0 !bg-transparent">
     <ng-template #headless>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div
@@ -64,7 +73,7 @@
                 <div class="flex items-center gap-4">
                     <p-button
                         label="Cancelar"
-                        (click)="hideLoginModal()"
+                        (click)="visibleLoginModal = false"
                         [text]="true"
                         styleClass="!p-3 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"
                         class="w-full"
@@ -82,3 +91,35 @@
         </form>
     </ng-template>
 </p-dialog>
+
+<p-popover #op styleClass="min-w-[8rem] w-56 !bg-slate-950 !text-slate-50 p-1 !border !border-slate-800 !rounded-md">
+    <div class="flex flex-col gap-4">
+        <div class="text-xs">
+            <div class="flex flex-col gap-2">
+            <b>{{ me.nome }}</b>
+            <b>{{ me.email }}</b>
+            </div>
+            <p-divider class="!my-2" />
+            <ul class="list-none p-0 m-0 flex flex-col">
+                @for ( route of routerMenu; track $index){
+                <li class="flex items-center gap-2 px-1 py-2 hover:bg-slate-800 hover:text-slate-50 cursor-pointer rounded-border" 
+                    [routerLink]="routerMenu.routerLink">
+                    <i [class]="route.icon" style="width: 32px"></i>
+                    <div>
+                        <span class="font-normal text-white">{{ route.label }}</span>
+                    </div>
+                </li>
+                }
+            </ul>
+            <p-divider class="!my-2" />
+            <div class="flex items-center gap-2 px-4 py-2 hover:bg-slate-800 hover:text-slate-50 cursor-pointer rounded-border"
+                (click)="logout()">
+                <i class="pi pi-sign-out" style="width: 23px"></i>
+                
+                <div>
+                    <span class="font-normal text-white">Sair</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-popover>

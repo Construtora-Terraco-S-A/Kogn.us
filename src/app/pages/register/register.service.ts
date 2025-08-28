@@ -11,6 +11,10 @@ export class RegisterService {
     private http: HttpClient
   ) { }
 
+  /**
+   * * Carrega planos disponíveis para escolha de registro
+   * @return []
+   */
   public getPlanos(){
     return this.http.get(`${this.baseUrl}/planos`)
   }
