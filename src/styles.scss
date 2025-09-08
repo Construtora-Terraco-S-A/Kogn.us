@@ -27,3 +27,8 @@ p {
 button {
   color: #fff;
 }
+
+::selection {
+  background-color: #4C2487;
+  color: #ffffff;
+}

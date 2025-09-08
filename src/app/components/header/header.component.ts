@@ -1,5 +1,15 @@
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { 
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
 import { Router, RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { InputTextModule } from 'primeng/inputtext';

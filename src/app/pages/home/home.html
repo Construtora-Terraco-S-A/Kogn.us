@@ -1,12 +1,12 @@
 <section class="relative py-20 px-4 overflow-hidden">
     <div class="max-w-7xl mx-auto text-center relative z-10">
-        <div class="flex items-center justify-center gap-2.5">
+        <div class="trecho-animado flex items-center justify-center gap-2.5">
             <img
                 src="https://storage.googleapis.com/hostinger-horizons-assets-prod/7c9be4d7-e245-4b80-b131-cb1f891725e5/10526ac86c95a8792ceaeaa0212d4b3d.png"
                 alt="kogn.us icon"
-                class="text-7xl h-[1em]"
+                class="text-8xl h-[1em]"
             />
-            <span class="font-['Outfit'] font-bold text-[2.5em]">
+            <span class=" font-['Outfit'] font-bold text-[5em]">
                 <span class="text-white">kogn</span>
                 <span class="text-pink-400">.us</span>
             </span>
@@ -30,4 +30,64 @@
             </button>
         </div>
     </div>
+</section>
+
+<section class="py-20 px-4 bg-black/10">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                Simples, rápido e <span class="text-purple-400">poderoso</span>
+            </h2>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+                Criar materiais de estudo nunca foi tão fácil.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 text-center mb-4">
+            @for(step of steps; track $index){
+                <div class="text-center p-6">
+                    <div class="flex justify-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
+                            <i [ngClass]="[step.icon, step.color]" class="!text-2xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">
+                        {{step.title}}
+                    </h3>
+                    <p class="text-gray-300 text-lg">
+                        {{step.description}}
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="py-20 px-4 relative">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+              Por que escolher <span class="text-purple-400">kogn.us</span>?
+            </h2>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto">Com recursos de IA cuidadosamente programados, oferecemos precisão e versatilidade incomparáveis na criação de conteúdo, e muito mais!</p>     
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            @for(feature of features; track $index){
+                <div class="delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:border-purple-500/30 transition-all">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                        <i [ngClass]="[feature.icon]" class="text-white !text-2xl"></i>
+                    </div>
+                    <h3 class="text-base font-semibold text-white mb-2">
+                        {{feature.title}}
+                    </h3>
+                    <p class="text-gray-300 text-sm">
+                        {{feature.description}}
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+    <img src="https://storage.googleapis.com/hostinger-horizons-assets-prod/7c9be4d7-e245-4b80-b131-cb1f891725e5/206b883b571e6c5266e8229882e190c0.png" 
+        alt="Elemento decorativo" 
+        class="absolute top-12 left-10 w-48 opacity-5 -rotate-12 pointer-events-none hidden lg:block"
+    >
 </section>

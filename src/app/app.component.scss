@@ -7,9 +7,9 @@
 }
 
 .app-content {
-  padding: 2rem;
-  max-width: 72rem;
-  margin: auto;
+  padding: 4rem 0;
+  // max-width: 72rem;
+  // margin: auto;
   overflow: auto;
   flex-grow: 1; /* Permite que o conteúdo principal (router-outlet) ocupe todo o espaço restante */
   transition: all 0.2s ease-in-out;
@@ -25,40 +25,39 @@ app-header {
 //Loading and Toast
 
 .loading {
-    position: fixed; /* Fixa o loading na tela, cobrindo todo o viewport */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Fundo preto com 70% de transparência */
-    display: flex; /* Flexbox para centralizar o spinner */
-    justify-content: center;
-    align-items: center;
-    pointer-events: all; /* Desativa eventos de clique no fundo */
-    z-index: 99999999999999999999999999999999999999999999999999; /* Certifique-se de que o loading está no topo de outros elementos */
+  position: fixed; /* Fixa o loading na tela, cobrindo todo o viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Fundo preto com 70% de transparência */
+  display: flex; /* Flexbox para centralizar o spinner */
+  justify-content: center;
+  align-items: center;
+  pointer-events: all; /* Desativa eventos de clique no fundo */
+  z-index: 99999999999999999999999999999999999999999999999999; /* Certifique-se de que o loading está no topo de outros elementos */
 }
 
 p-progressSpinner {
-    pointer-events: auto; /* Certifica-se de que o spinner em si pode ser interagido, se necessário */
+  pointer-events: auto; /* Certifica-se de que o spinner em si pode ser interagido, se necessário */
 }
 
 .notification-button {
-    width: 150px;
-
+  width: 150px;
 }
 
 .pi-times-circle {
-    color: #fff !important;
-    font-size: 1.5rem !important;
-    background: #ff8481 !important;
-    border-radius: 50% !important;
-    width: 1.4rem !important;
-    height: 1.4rem !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    border: 1px solid #ffffff !important;
+  color: #fff !important;
+  font-size: 1.5rem !important;
+  background: #ff8481 !important;
+  border-radius: 50% !important;
+  width: 1.4rem !important;
+  height: 1.4rem !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border: 1px solid #ffffff !important;
 }
 
 .toast-noti{
