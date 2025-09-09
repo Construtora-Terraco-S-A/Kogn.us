@@ -12,7 +12,6 @@ import {
   ViewEncapsulation
 } from "@angular/core";
 import { Router, RouterModule } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -21,7 +20,7 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { DividerModule } from 'primeng/divider';
-import { AuthService, LoadingService } from '../../core';
+import { AuthService } from '../../core';
 
 @Component({
   selector: 'app-header',
@@ -61,7 +60,8 @@ export class Header implements OnInit {
 
 
   constructor(
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {
     effect(() => {
       const isAuthenticated = this.authService.isAuthenticatedSignal();
@@ -96,6 +96,7 @@ export class Header implements OnInit {
     this.authService.login(this.loginForm.value.email, this.loginForm.value.senha).subscribe({
       next: () => {
         this.visibleLoginModal = false;
+        this.router.navigate(['/generate-content'])
       }
     });
   }
