@@ -1,4 +1,4 @@
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 
@@ -6,7 +6,6 @@ import { ButtonModule } from 'primeng/button';
   selector: 'app-home',
   imports: [
     ButtonModule, 
-    NgClass, 
     CommonModule
   ],
   templateUrl: './home.html',

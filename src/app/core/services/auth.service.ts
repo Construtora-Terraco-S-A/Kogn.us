@@ -49,6 +49,15 @@ export class AuthService implements OnDestroy {
     );
   }
   
+  logout(): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('session');
+      this.cookieService.delete('token', '/');
+      this.isAuthenticatedSignal.set(false);
+      this.router.navigate(['/']);
+    }
+  }
+  
   private syncAuthStatus(event: StorageEvent): void {
     if (event.key === 'session') {
       this.isAuthenticatedSignal.set(!!event.newValue);

@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-generate-content',
-  imports: [],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './generate-content.html',
   styleUrl: './generate-content.scss'
 })
@@ -42,7 +45,7 @@ export class GenerateContent {
     },
     { id: 'mindmap',
       name: 'Mapa Mental',
-      icon: Map,
+      icon: "pi pi-map",
       color: 'from-pink-500 to-rose-500',
       description: 'Organize ideias e conceitos visualmente.'
     },

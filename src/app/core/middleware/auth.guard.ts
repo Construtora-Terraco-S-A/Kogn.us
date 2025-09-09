@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {
     if (this.authService.isAuthenticatedSignal()) {
-      return this.router.parseUrl('/home');
+      return true;
     } else {
       return this.router.parseUrl('/notauthorized');
     }

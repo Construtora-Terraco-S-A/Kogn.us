@@ -6,6 +6,7 @@ import {
 } from '@angular/forms';
 import {
   Component,
+  effect,
   OnInit,
   ViewChild,
   ViewEncapsulation
@@ -45,7 +46,6 @@ export class Header implements OnInit {
 
   @ViewChild(Popover) op!: Popover;
   visibleLoginModal: boolean = false;
-  visibleMenuPopover: boolean = false;
   loginFormSubmitted: boolean = false;
   isLogged: boolean = false;
   me: any = {};
@@ -61,21 +61,23 @@ export class Header implements OnInit {
 
 
   constructor(
-    private readonly loadingService:  LoadingService,
-    private readonly authService: AuthService,
-    private readonly router: Router,
-    private readonly cookieService: CookieService
-  ) {}
+    private readonly authService: AuthService
+  ) {
+    effect(() => {
+      const isAuthenticated = this.authService.isAuthenticatedSignal();
+      this.isLogged = isAuthenticated;
+      if (isAuthenticated) {
+        this.dados();
+      } else {
+        this.me = {}; // Limpa os dados do usuário ao fazer logout
+      }
+    });
+  }
+
+  ngOnInit(): void {}
 
   toggle(event: Event) {
     this.op.toggle(event);
-  }
-
-  ngOnInit(): void {
-    this.isLogged = this.loggedIn();
-    if(this.isLogged){
-      this.dados();
-    }
   }
 
   public loginForm: FormGroup = new FormGroup({
@@ -88,64 +90,19 @@ export class Header implements OnInit {
     return control?.invalid && (control.touched || this.loginFormSubmitted);
   }
 
-  onSubmit() {
-    // this.loginFormSubmitted = true;
-    // if (this.loginForm.valid) {
-    //   this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Form Submitted', life: 3000 });
-    //   this.loginForm.reset();
-    //   this.loginFormSubmitted = false;
-    // }
-  }
+  onSubmit() {}
 
   public login(): any {
-    this.loadingService.show();
     this.authService.login(this.loginForm.value.email, this.loginForm.value.senha).subscribe({
-      next: (response: any) => {
-        localStorage.setItem('session', JSON.stringify(response));
-        this.cookieService.set('token', encodeURIComponent(response.access_token), { path: '/' });
+      next: () => {
         this.visibleLoginModal = false;
-        this.loadingService.hide();
-        this.router.navigate(['/']);
-        this.loggedIn();
-      },
-      error: (error) => {
-        console.error(error);
-        this.loadingService.hide();
       }
     });
   }
 
-  private loggedIn(): any {
-    this.loadingService.show();
-    if (this.cookieService.get('token')) {
-      this.loadingService.hide();
-      return this.loggedIn;
-    } else {
-      this.loadingService.hide();
-      return this.loggedIn;
-    }
-  }
-
   public logout(): any {
-    this.loadingService.show();
-    localStorage.removeItem('session');
-    this.cookieService.delete('token');
-    this.loadingService.hide();
-    this.router.navigate(['/']);
-    this.loggedIn();
-    // this.authService.logout().subscribe({
-    //   next: (response: any) => {
-    //     localStorage.removeItem('session');
-    //     this.cookieService.delete('token');
-    //     this.loadingService.hide();
-    //     this.router.navigate(['/']);
-    //     this.loggedIn();
-    //   },
-    //   error: (error) => {},
-    //   complete: () => {
-    //     this.loadingService.hide();
-    //   }
-    // });
+    this.authService.logout();
+    this.op.toggle(event);
   }
 
   public dados(): any {
