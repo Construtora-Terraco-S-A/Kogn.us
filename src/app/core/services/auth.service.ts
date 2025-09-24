@@ -35,9 +35,8 @@ export class AuthService implements OnDestroy {
       tap((response: any) => {
         if (typeof localStorage !== 'undefined') { // Verifica se está no navegador
           localStorage.setItem('session', JSON.stringify(response));
-          this.cookieService.set('token', encodeURIComponent(response.access_token), { path: '/' });
+          this.cookieService.set('token', encodeURIComponent(response.token), { path: '/' });
           this.isAuthenticatedSignal.set(true); // Atualiza o signal
-          this.router.navigate(['/home']);
         }
       }),
       catchError((error) => {
@@ -50,12 +49,24 @@ export class AuthService implements OnDestroy {
   }
   
   logout(): void {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.removeItem('session');
-      this.cookieService.delete('token', '/');
-      this.isAuthenticatedSignal.set(false);
-      this.router.navigate(['/']);
-    }
+    this.http.post(`${this.baseUrl}/logout`, {}, {
+      headers: {
+        'Authorization': `Bearer ${decodeURIComponent(this.cookieService.get('token'))}`
+      }
+    }).subscribe({
+      next: () => {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.removeItem('session');
+          this.cookieService.delete('token', '/');
+          this.isAuthenticatedSignal.set(false);
+          this.router.navigate(['/']);
+        }
+      },
+      error: (error) => {
+        console.error("Erro no logout:", error);
+        this.loadingService.toastr("Erro!", error.error.message || "Ocorreu um erro ao fazer logout.", "error");
+      }
+    });
   }
   
   private syncAuthStatus(event: StorageEvent): void {

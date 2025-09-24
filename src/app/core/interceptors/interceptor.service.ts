@@ -13,11 +13,10 @@ export const HttpInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
   const session = JSON.parse(localStorage.getItem('session') ?? '{}');
 
   loadingService.show();
-
-  if (session.access_token) {
+  if (session.token) {
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${session.access_token}`
+        Authorization: `Bearer ${session.token}`
       }
     });
   }
