@@ -19,4 +19,12 @@ export class RegisterService {
     return this.http.get(`${this.baseUrl}/planos`)
   }
 
+  /**
+   * * Registra o perfil do usuário em conjunto com o plano escolhido
+   * @return []
+   */
+  public register(data: any){
+    return this.http.post(`${this.baseUrl}/registrar`, data)
+  }
+
 }

@@ -56,14 +56,13 @@
                 style="background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #1e3a8a 100%);"
             >
                 <div class="inline-flex flex-col gap-2">
-                    <label for="username" class="text-primary-50 font-semibold">Nome de usuário</label>
+                    <label for="email" class="text-primary-50 font-semibold">Email</label>
                     <input pInputText formControlName="email" 
-                        id="username" 
+                        id="email"
                         class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80"
-                        [invalid]="isInvalid('email')"
                     />
                     @if (isInvalid('email')) {
-                        <p-message severity="error" size="small" variant="simple">Nome do usuário é obrigatório.</p-message>
+                        <p-message severity="error" size="small" variant="simple">Email é obrigatório.</p-message>
                     }
                 </div>
                 <div class="inline-flex flex-col gap-2">
@@ -72,7 +71,6 @@
                         id="password"
                         class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80"
                         type="password"
-                        [invalid]="isInvalid('senha')"
                     />
                     @if (isInvalid('senha')) {
                         <p-message severity="error" size="small" variant="simple">Senha é obrigatório.</p-message>

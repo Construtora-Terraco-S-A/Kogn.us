@@ -1,4 +1,5 @@
-<section class="py-20 px-4">
+@if(choosedPlan === 0){
+<section class="py-20 pb-4 px-4">
     <div class="text-center mb-16">
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
             Escolha o plano perfeito para <span class="text-purple-400">você</span>
@@ -39,7 +40,10 @@
                             </li>
                         }
                         </ul>
-                        <button class="flex justify-center items-center h-3 w-full text-lg py-6 rounded-lg" [ngClass]="plano.mais_popular ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90' : 'bg-slate-700 hover:bg-slate-600'">
+                        <button class="flex justify-center items-center h-3 w-full text-lg py-6 rounded-lg" (click)="choosePlan(plano.id)"
+                            [ngClass]="plano.mais_popular ? 
+                                'bg-slate-700 hover:bg-slate-600' : 
+                                'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90'">
                             <span class="text-sm">Começar agora</span>
                         </button>
                     </div>
@@ -47,11 +51,100 @@
             }
         }
         @if(freeplan){
-            <a href="" class="text-white text-sm">Continuar com plano gratuito</a>
+            <a (click)="choosePlan(1)" class="text-white text-sm cursor-pointer">Continuar com plano gratuito</a>
         }
     </div>
-        
     <div class="flex justify-center mt-6">
         <span class="text-gray-400">Todos os planos incluem acesso ao Feed da Comunidade, Meus Cadernos e suporte prioritário.</span>
     </div>
 </section>
+}
+
+@if(choosedPlan !== 0){
+<section class="max-w-4xl mx-auto py-20 px-4">
+    <div class="mb-6">
+        <button (click)="choosedPlan = 0" class="p-2 hover:underline">
+            <i class="pi pi-arrow-circle-left text-xxl mr-3"></i>
+            <span>Voltar</span>
+        </button>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="grid gap-4">
+        <div class="grid md:grid-cols-2 gap-6">
+            
+            <div class="flex flex-col gap-2">
+                <label for="nome" class="text-primary-50 font-semibold">Nome Completo</label>
+                <input pInputText  class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50" 
+                    formControlName="nome" id="nome" >
+                @if (isInvalid('nome')) {
+                    <p-message severity="error" size="small" variant="simple">Nome completo é obrigatório.</p-message>
+                }
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="email" class="text-primary-50 font-semibold">Email</label>
+                <input pInputText formControlName="email"
+                    id="email" 
+                    class="!bg-white/20 !border-0 rounded-lg !p-2 !text-primary-50 w-full"
+                />
+                @if (isInvalid('email')) {
+                    <p-message severity="error" size="small" variant="simple">Email é obrigatório.</p-message>
+                }
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="senha" class="text-primary-50 font-semibold">
+                    <i class="pi pi-lock mr-2"></i>Senha
+                </label>
+                <div class="relative w-full">
+                    <input pInputText class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50 w-full pr-10" 
+                        formControlName="senha" id="password" [type]="senhaVisivel ? 'text' : 'password'" >
+                    <i class="pi absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" 
+                        [class.pi-eye]="!senhaVisivel" 
+                        [class.pi-eye-slash]="senhaVisivel"
+                        (click)="toggleSenhaVisivel()"></i>
+                </div>
+                @if (isInvalid('senha')) {
+                    <p-message severity="error" size="small" variant="simple">Senha é obrigatório.</p-message>
+                }
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="senha_confirmation" class="text-primary-50 font-semibold">
+                    <i class="pi pi-lock mr-2"></i>Confirmação de senha
+                </label>
+                <div class="relative w-full">
+                    <input pInputText class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50 w-full pr-10" 
+                        formControlName="senha_confirmation" id="password_confirmation" [type]="confirmacaoSenhaVisivel ? 'text' : 'password'" >
+                    <i class="pi absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" 
+                        [class.pi-eye]="!confirmacaoSenhaVisivel" 
+                        [class.pi-eye-slash]="confirmacaoSenhaVisivel"
+                        (click)="toggleConfirmacaoSenhaVisivel()"></i>
+                </div>
+                @if (isInvalid('senha_confirmation')) {
+                    <p-message severity="error" size="small" variant="simple">Confirmação de senha é obrigatório.</p-message>
+                }
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="nome_usuario" class="text-primary-50 font-semibold">Nome de usuário</label>
+                <input pInputText formControlName="nome_usuario"
+                    class="!bg-white/20 !border-0 rounded-lg !p-2 !text-primary-50 w-full"
+                />
+                @if (isInvalid('nome_usuario')) {
+                    <p-message severity="error" size="small" variant="simple">Nome do usuário é obrigatório.</p-message>
+                }
+            </div>
+        
+
+        @if (isPaidPlan) {
+            <div class="flex flex-col gap-2">
+                <label for="card-element" class="text-primary-50 font-semibold">Detalhes do Cartão de Crédito</label>
+                <div id="card-element" class="!bg-white/20 rounded-xl p-3"></div>
+                @if (cardErrors) {
+                    <p-message severity="error" size="small" variant="simple">{{cardErrors}}</p-message>
+                }
+            </div>
+        }
+        </div>
+
+        <button class="border border-violet-400 rounded-md w-48 p-2 justify-self-center mt-4" type="submit">Registrar-me</button>
+    </form>
+</section>
+}
