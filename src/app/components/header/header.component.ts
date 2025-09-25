@@ -20,7 +20,8 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { DividerModule } from 'primeng/divider';
-import { AuthService } from '../../core';
+import { AuthService, LoadingService } from '../../core';
+import { HeaderService } from './header.service';
 
 @Component({
   selector: 'app-header',
@@ -37,6 +38,7 @@ import { AuthService } from '../../core';
     PopoverModule,
     DividerModule
   ],
+  providers: [HeaderService],
   templateUrl: './header.html',
   styleUrl: './header.scss',
   encapsulation: ViewEncapsulation.None,
@@ -61,7 +63,9 @@ export class Header implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    public headerService: HeaderService,
+    public readonly loadingService: LoadingService
   ) {
     effect(() => {
       const isAuthenticated = this.authService.isAuthenticatedSignal();
@@ -97,6 +101,21 @@ export class Header implements OnInit {
       next: () => {
         this.visibleLoginModal = false;
         this.router.navigate(['/generate-content'])
+      }
+    });
+  }
+
+  public forgotPassword(): any {
+    this.headerService.forgotPassword(this.loginForm.value.email).subscribe({
+      next: () => {
+        console.log('Email enviado com sucesso');
+      },
+      error: (err) => {
+        console.log(err);
+        this.loadingService.toastr('Erro!', err.message, 'error');
+      },
+      complete: () => {
+        console.log('Complete');
       }
     });
   }

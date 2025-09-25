@@ -72,6 +72,9 @@
                         class="!bg-white/20 !border-0 !p-3 !text-primary-50 w-80"
                         type="password"
                     />
+                    <button (click)="forgotPassword()" class="text-right text-sm hover:underline">
+                        <span>Esqueceu a senha</span>
+                    </button>
                     @if (isInvalid('senha')) {
                         <p-message severity="error" size="small" variant="simple">Senha é obrigatório.</p-message>
                     }
@@ -109,7 +112,7 @@
             <ul class="list-none p-0 m-0 flex flex-col">
                 @for ( route of routerMenu; track $index){
                 <li class="flex items-center gap-2 px-1 py-2 hover:bg-slate-800 hover:text-slate-50 cursor-pointer rounded-border" 
-                    [routerLink]="routerMenu.routerLink">
+                    [routerLink]="route.routerLink">
                     <i [class]="route.icon" style="width: 32px"></i>
                     <div>
                         <span class="font-normal text-white">{{ route.label }}</span>
