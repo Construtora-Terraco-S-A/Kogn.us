@@ -24,7 +24,10 @@ export class RegisterService {
    * @return []
    */
   public register(data: any){
-    return this.http.post(`${this.baseUrl}/registrar`, data)
+    return this.http.post(`${this.baseUrl}/preparar-assinatura`, data)
   }
 
+  public finalizeRegister (data: any)  {
+    return this.http.post(`${this.baseUrl}/finalizar-registro`, data)
+  }
 }

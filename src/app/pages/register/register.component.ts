@@ -24,6 +24,7 @@ export class Register implements OnInit, AfterViewInit {
   public planos: any[] = [];
   public freeplan: boolean = false;
   public choosedPlan: number = 0;
+  public selectedPlan: any = null;
   public registerForm: FormGroup;
   public registerFormSubmitted: boolean = false;
 
@@ -84,8 +85,8 @@ export class Register implements OnInit, AfterViewInit {
 
   choosePlan(planId: number) {
     this.choosedPlan = planId;
-    const selectedPlan = this.planos.find(p => p.id === planId);
-    if (selectedPlan && +selectedPlan.valor_mensal > 0) {
+    this.selectedPlan = this.planos.find(p => p.id === planId);
+    if (this.selectedPlan && +this.selectedPlan.valor_mensal > 0) {
       setTimeout(() => this.mountCard(), 0);
     }
   }
