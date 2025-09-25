@@ -1,0 +1,23 @@
+.p-tablist-tab-list {
+    background: none !important;
+    justify-content: space-between;
+}
+
+.p-tabpanels {
+    background: none !important;
+}
+
+.p-tab-active {
+    background-color: #020617b3 !important;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.p-tab {
+    background: none !important;
+    border-radius: 5px;
+    padding: 5px !important;
+    width: 33.3%;
+    text-align: center;
+}

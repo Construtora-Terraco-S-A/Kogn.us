@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { GenerateContent, Home, Register } from './pages';
 import { AuthGuard } from './core';
 import { NotAuthorized } from './pages/not-authorized/not-authorized.component';
+import { Settings } from './pages/settings';
 
 export const routes: Routes = [
     
@@ -29,10 +30,10 @@ export const routes: Routes = [
         title: 'Generate Content',
         canActivate: [AuthGuard]
     },
-    // {
-    //     path: 'profile',
-    //     component: Profile,
-    //     title: 'Profile',
-    //     canActivate: [AuthGuard]
-    // }
+    {
+        path: 'settings',
+        component: Settings,
+        title: 'Settings',
+        canActivate: [AuthGuard]
+    }
 ];

@@ -57,7 +57,7 @@ export class Header implements OnInit {
     { label: 'Agenda', icon: 'pi pi-fw pi-calendar', routerLink: '/calendario'},
     { label: 'Curriculo', icon: 'pi pi-fw pi-file', routerLink: '/curriculo'},
     { label: 'Correção', icon: 'pi pi-fw pi-pencil', routerLink: '/correcao'},
-    { label: 'Configurações', icon: 'pi pi-fw pi-cog', routerLink: '/configuracoes' }
+    { label: 'Configurações', icon: 'pi pi-fw pi-cog', routerLink: '/settings' }
   ];
 
 
@@ -107,16 +107,14 @@ export class Header implements OnInit {
 
   public forgotPassword(): any {
     this.headerService.forgotPassword(this.loginForm.value.email).subscribe({
-      next: () => {
-        console.log('Email enviado com sucesso');
+      next: (res: any) => {
+        this.loadingService.toastr('Sucesso!', res.message, 'success');
       },
       error: (err) => {
         console.log(err);
         this.loadingService.toastr('Erro!', err.message, 'error');
       },
-      complete: () => {
-        console.log('Complete');
-      }
+      complete: () => {}
     });
   }
 

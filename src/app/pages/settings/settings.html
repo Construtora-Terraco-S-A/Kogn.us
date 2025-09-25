@@ -1,0 +1,99 @@
+<section class="py-20 px-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Configurações</h1>
+            <p class="text-gray-300 text-lg">Personalize sua experiência no kogn.us.</p>
+        </div>
+
+        <p-tabs class="" [value]="tab">
+            <p-tablist class="h-10 w-full justify-between grid grid-cols-3 items-center rounded-xl bg-slate-800 p-1 text-slate-400 mb-8">
+                <p-tab [value]="0">
+                    <i class="pi pi-user mr-2"></i>
+                    Perfil
+                </p-tab>
+                <p-tab [value]="1">
+                    <i class="pi pi-bell mr-2"></i>
+                    Notificações
+                </p-tab>
+                <p-tab [value]="2">
+                    <i class="pi pi-address-book mr-2"></i>
+                    Contatos
+                </p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel [value]="0">
+                    <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg text-slate-50 shadow-sm">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="text-lg font-semibold leading-none tracking-tight flex items-center gap-3">
+                                <i class="pi pi-user text-purple-400"></i>
+                                Perfil e Avatar
+                            </h3>
+                            <p class="text-sm text-slate-400">
+                                Atualize suas informações e personalize seu avatar.
+                            </p>
+                        </div>
+                        <div class="p-6 pt-0 space-y-6">
+                            <div class="flex flex-col sm:flex-row items-center gap-6">
+                                <div class="rounded-full flex items-center justify-center w-24 h-24" 
+                                    style="background-color: rgb(139, 92, 246);">
+                                
+                                </div>
+                                <div class="flex-grow text-center sm:text-left">
+                                    <p class="font-semibold text-lg">Este é o seu avatar!</p>
+                                    <p class="text-slate-400 text-sm mb-2">
+                                        Clique no botão para gerar um novo aleatoriamente.
+                                    </p>
+                                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                                        <i class="pi pi-sparkles text-white mr-3"></i>
+                                        Randomizar Avatar
+                                    </button>
+                                </div>
+                            </div>
+                            <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <div class="flex flex-col gap-2">
+                                            <label for="nome" class="text-primary-50 font-semibold">Nome</label>
+                                            <input pInputText  class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50" 
+                                                formControlName="nome" id="nome" >
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="flex flex-col gap-2">
+                                            <label for="email" class="text-primary-50 font-semibold">Email</label>
+                                            <input pInputText  class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50" 
+                                                formControlName="email" id="email" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-8"> 
+                        <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary hover:bg-primary/90 h-10 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white">
+                            <i class="pi pi-save mr-3"></i>
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </p-tabpanel>
+                <p-tabpanel [value]="1">
+                    <p class="m-0">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
+                        aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                        enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
+                        qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                    </p>
+                </p-tabpanel>
+                <p-tabpanel [value]="2">
+                    <p class="m-0">
+                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
+                        corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
+                        culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+                        expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+                    </p>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+
+    </div>
+</section>
