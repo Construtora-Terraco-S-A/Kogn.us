@@ -4,6 +4,7 @@ import { LoadingService } from '../../core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
+import { Router } from '@angular/router';
 
 declare var Stripe: any;
 
@@ -38,7 +39,8 @@ export class Register implements OnInit, AfterViewInit {
   constructor(
     private registerService: RegisterService,
     private readonly loadingService: LoadingService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router
   ) {
     this.registerForm = new FormGroup({
       nome: new FormControl('', [Validators.required]),
@@ -88,6 +90,10 @@ export class Register implements OnInit, AfterViewInit {
     this.selectedPlan = this.planos.find(p => p.id === planId);
     if (this.selectedPlan && +this.selectedPlan.valor_mensal > 0) {
       setTimeout(() => this.mountCard(), 0);
+    } else {
+      if (this.cardElement) {
+        this.cardElement.unmount();
+      }
     }
   }
 
@@ -99,12 +105,10 @@ export class Register implements OnInit, AfterViewInit {
 
     this.loadingService.show();
 
-    const selectedPlan = this.planos.find(p => p.id === this.choosedPlan);
-    const isFreePlan = !selectedPlan || +selectedPlan.valor_mensal === 0;
-
+    const isPaidPlan = this.isPaidPlan;
     let paymentMethodId = null;
 
-    if (!isFreePlan) {
+    if (isPaidPlan) {
       const { paymentMethod, error } = await this.stripe.createPaymentMethod({
         type: 'card',
         card: this.cardElement,
@@ -126,53 +130,73 @@ export class Register implements OnInit, AfterViewInit {
       ...this.registerForm.value,
       plano_id: this.choosedPlan,
       payment_method_id: paymentMethodId,
-      url_callback: window.location.origin
     };
 
-    this.registerService.register(registrationData).subscribe({
+    this.registerService.prepareRegister(registrationData).subscribe({
       next: (response: any) => {
-        this.loadingService.toastr('Sucesso!', response.message, 'success');
+        // Success (e.g., free plan, or paid plan not requiring 3DS)
+        if (isPaidPlan) {
+            // If paid, we assume finalize is needed with payment_intent_id
+            const finalizationData = {
+                ...registrationData,
+                payment_intent_id: response.payment_intent_id
+            };
+            this.finalizeRegistration(finalizationData);
+        } else {
+            // If free plan, registration might be complete already.
+            this.loadingService.hide();
+            this.loadingService.toastr('Sucesso!', response.message || 'Registro realizado com sucesso!', 'success');
+            this.router.navigate(['/login']);
+        }
       },
       error: (err) => {
-        if (err.status === 402 && err.error.payment_intent_id) {
-          this.handlePaymentAction(err.error.payment_intent_id, paymentMethodId);
+        if (err.status === 402 && err.error.client_secret) {
+          // 3DS authentication required
+          this.loadingService.toastr('Info', 'Aguardando autenticação do banco...', 'info');
+          this.handle3DSecure(err.error.client_secret, registrationData);
         } else {      
           const errorMessage = err.error?.message || 'Ocorreu um erro no registro.';
           this.loadingService.toastr('Erro!', errorMessage, 'error');
+          this.loadingService.hide();
           console.error(err);
         }
-      },
-      complete: () => {
-        this.loadingService.hide();
       }
     });
   }
 
-  async handlePaymentAction(paymentIntentId: string, paymentMethodId: string | null) {
-    this.loadingService.toastr('Info', 'Aguardando autenticação do banco...', 'info');
-    const { paymentIntent, error } = await this.stripe.confirmCardPayment(paymentIntentId);
+  async handle3DSecure(clientSecret: string, registrationData: any) {
+    const { error, paymentIntent } = await this.stripe.confirmCardPayment(clientSecret);
 
     if (error) {
-      this.loadingService.toastr('Erro!', 'Erro na autenticação 3D Secure: ' + error.message, 'error');
-    } else if (paymentIntent.status === 'succeeded') {
-      this.loadingService.toastr('Sucesso', 'Autenticação bem-sucedida. Finalizando registro...', 'success');
-      const registrationData = {
-        ...this.registerForm.value,
-        plano_id: this.choosedPlan,
-        payment_method_id: paymentMethodId,
-        url_callback: window.location.origin
+      this.loadingService.toastr('Erro!', 'Falha na autenticação do pagamento: ' + error.message, 'error');
+      this.loadingService.hide();
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      this.loadingService.toastr('Sucesso', 'Pagamento confirmado. Finalizando registro...', 'success');
+      const finalizationData = {
+          ...registrationData,
+          payment_intent_id: paymentIntent.id
       };
-      this.registerService.register(registrationData).subscribe({
+      this.finalizeRegistration(finalizationData);
+    } else {
+      this.loadingService.toastr('Info', 'Pagamento não foi bem-sucedido. Status: ' + (paymentIntent ? paymentIntent.status : 'unknown'), 'info');
+      this.loadingService.hide();
+    }
+  }
+
+  finalizeRegistration(finalizationData: any) {
+    this.registerService.finalizeRegister(finalizationData).subscribe({
         next: (res: any) => {
-          this.loadingService.toastr('Sucesso!', res.message, 'success');
+            this.loadingService.hide();
+            this.loadingService.toastr('Sucesso!', res.message || 'Registro finalizado com sucesso!', 'success');
+            this.router.navigate(['/login']);
         },
         error: (err: any) => {
-          const errorMessage = err.error?.message || 'Ocorreu um erro no registro.';
-          this.loadingService.toastr('Erro!', errorMessage, 'error');
-          console.error(err);
+            this.loadingService.hide();
+            const errorMessage = err.error?.message || 'Ocorreu um erro ao finalizar o registro.';
+            this.loadingService.toastr('Erro!', errorMessage, 'error');
+            console.error(err);
         }
-      });
-    }
+    });
   }
 
   isInvalid(controlName: string) {

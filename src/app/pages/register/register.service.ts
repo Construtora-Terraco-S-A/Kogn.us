@@ -23,7 +23,7 @@ export class RegisterService {
    * * Registra o perfil do usuário em conjunto com o plano escolhido
    * @return []
    */
-  public register(data: any){
+  public prepareRegister (data: any){
     return this.http.post(`${this.baseUrl}/preparar-assinatura`, data)
   }
 
