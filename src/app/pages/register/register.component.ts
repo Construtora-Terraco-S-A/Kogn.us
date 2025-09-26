@@ -28,6 +28,7 @@ export class Register implements OnInit, AfterViewInit {
   public selectedPlan: any = null;
   public registerForm: FormGroup;
   public registerFormSubmitted: boolean = false;
+  public loadingMessage: string | null = null;
 
   senhaVisivel: boolean = false;
   confirmacaoSenhaVisivel: boolean = false;
@@ -103,12 +104,13 @@ export class Register implements OnInit, AfterViewInit {
       return;
     }
 
-    this.loadingService.show();
+    this.loadingMessage = 'Iniciando...';
 
     const isPaidPlan = this.isPaidPlan;
     let paymentMethodId = null;
 
     if (isPaidPlan) {
+      this.loadingMessage = 'Validando pagamento...';
       const { paymentMethod, error } = await this.stripe.createPaymentMethod({
         type: 'card',
         card: this.cardElement,
@@ -120,7 +122,7 @@ export class Register implements OnInit, AfterViewInit {
 
       if (error) {
         this.cardErrors = error.message;
-        this.loadingService.hide();
+        this.loadingMessage = null;
         return;
       }
       paymentMethodId = paymentMethod.id;
@@ -132,32 +134,30 @@ export class Register implements OnInit, AfterViewInit {
       payment_method_id: paymentMethodId,
     };
 
+    this.loadingMessage = 'Preparando assinatura...';
     this.registerService.prepareRegister(registrationData).subscribe({
       next: (response: any) => {
-        // Success (e.g., free plan, or paid plan not requiring 3DS)
         if (isPaidPlan) {
-            // If paid, we assume finalize is needed with payment_intent_id
             const finalizationData = {
                 ...registrationData,
                 payment_intent_id: response.payment_intent_id
             };
             this.finalizeRegistration(finalizationData);
         } else {
-            // If free plan, registration might be complete already.
-            this.loadingService.hide();
+            this.loadingMessage = null;
             this.loadingService.toastr('Sucesso!', response.message || 'Registro realizado com sucesso!', 'success');
             this.router.navigate(['/login']);
         }
       },
       error: (err) => {
         if (err.status === 402 && err.error.client_secret) {
-          // 3DS authentication required
+          this.loadingMessage = 'Aguardando autenticação...';
           this.loadingService.toastr('Info', 'Aguardando autenticação do banco...', 'info');
           this.handle3DSecure(err.error.client_secret, registrationData);
         } else {      
           const errorMessage = err.error?.message || 'Ocorreu um erro no registro.';
           this.loadingService.toastr('Erro!', errorMessage, 'error');
-          this.loadingService.hide();
+          this.loadingMessage = null;
           console.error(err);
         }
       }
@@ -169,7 +169,7 @@ export class Register implements OnInit, AfterViewInit {
 
     if (error) {
       this.loadingService.toastr('Erro!', 'Falha na autenticação do pagamento: ' + error.message, 'error');
-      this.loadingService.hide();
+      this.loadingMessage = null;
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       this.loadingService.toastr('Sucesso', 'Pagamento confirmado. Finalizando registro...', 'success');
       const finalizationData = {
@@ -179,19 +179,20 @@ export class Register implements OnInit, AfterViewInit {
       this.finalizeRegistration(finalizationData);
     } else {
       this.loadingService.toastr('Info', 'Pagamento não foi bem-sucedido. Status: ' + (paymentIntent ? paymentIntent.status : 'unknown'), 'info');
-      this.loadingService.hide();
+      this.loadingMessage = null;
     }
   }
 
   finalizeRegistration(finalizationData: any) {
+    this.loadingMessage = 'Finalizando registro...';
     this.registerService.finalizeRegister(finalizationData).subscribe({
         next: (res: any) => {
-            this.loadingService.hide();
+            this.loadingMessage = null;
             this.loadingService.toastr('Sucesso!', res.message || 'Registro finalizado com sucesso!', 'success');
             this.router.navigate(['/login']);
         },
         error: (err: any) => {
-            this.loadingService.hide();
+            this.loadingMessage = null;
             const errorMessage = err.error?.message || 'Ocorreu um erro ao finalizar o registro.';
             this.loadingService.toastr('Erro!', errorMessage, 'error');
             console.error(err);

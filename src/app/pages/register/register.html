@@ -148,7 +148,19 @@
                 }
                 </div>
 
-                <button class="border border-violet-400 rounded-md w-48 p-2 justify-self-center mt-4" type="submit">Registrar-me</button>
+                                <div class="justify-self-center flex flex-col items-center gap-2 mt-4">
+                    <button class="border border-violet-400 rounded-md w-48 p-2" type="submit" [disabled]="loadingMessage">
+                        Registrar-me
+                    </button>
+                    @if (loadingMessage) {
+                        <div class="flex items-center text-primary-50 h-[26px]">
+                            <i class="pi pi-spin pi-spinner" style="font-size: 1.5rem"></i>
+                            <span class="ml-2">{{ loadingMessage }}</span>
+                        </div>
+                    } @else {
+                        <div class="h-[26px]"></div> <!-- Placeholder to prevent layout shift -->
+                    }
+                </div>
             </form>
         </div>
 
