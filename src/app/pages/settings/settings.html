@@ -5,7 +5,7 @@
             <p class="text-gray-300 text-lg">Personalize sua experiência no kogn.us.</p>
         </div>
 
-        <p-tabs class="" [value]="tab">
+        <p-tabs [value]="tab">
             <p-tablist class="h-10 w-full justify-between grid grid-cols-3 items-center rounded-xl bg-slate-800 p-1 text-slate-400 mb-8">
                 <p-tab [value]="0">
                     <i class="pi pi-user mr-2"></i>
@@ -22,38 +22,38 @@
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel [value]="0">
-                    <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg text-slate-50 shadow-sm">
-                        <div class="flex flex-col space-y-1.5 p-6">
-                            <h3 class="text-lg font-semibold leading-none tracking-tight flex items-center gap-3">
-                                <i class="pi pi-user text-purple-400"></i>
-                                Perfil e Avatar
-                            </h3>
-                            <p class="text-sm text-slate-400">
-                                Atualize suas informações e personalize seu avatar.
-                            </p>
-                        </div>
-                        <div class="p-6 pt-0 space-y-6">
-                            <div class="flex flex-col sm:flex-row items-center gap-6">
-                                <div class="rounded-full flex items-center justify-center w-24 h-24" 
-                                    style="background-color: rgb(139, 92, 246);">
-                                
-                                </div>
-                                <div class="flex-grow text-center sm:text-left">
-                                    <p class="font-semibold text-lg">Este é o seu avatar!</p>
-                                    <p class="text-slate-400 text-sm mb-2">
-                                        Clique no botão para gerar um novo aleatoriamente.
-                                    </p>
-                                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
-                                        <i class="pi pi-sparkles text-white mr-3"></i>
-                                        Randomizar Avatar
-                                    </button>
-                                </div>
+                    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                        <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg text-slate-50 shadow-sm">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <h3 class="text-lg font-semibold leading-none tracking-tight flex items-center gap-3">
+                                    <i class="pi pi-user text-purple-400"></i>
+                                    Perfil e Avatar
+                                </h3>
+                                <p class="text-sm text-slate-400">
+                                    Atualize suas informações e personalize seu avatar.
+                                </p>
                             </div>
-                            <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="flex flex-col sm:flex-row items-center gap-6">
+                                    <div class="rounded-full flex items-center justify-center w-24 h-24" 
+                                        style="background-color: rgb(139, 92, 246);">
+                                    
+                                    </div>
+                                    <div class="flex-grow text-center sm:text-left">
+                                        <p class="font-semibold text-lg">Este é o seu avatar!</p>
+                                        <p class="text-slate-400 text-sm mb-2">
+                                            Clique no botão para gerar um novo aleatoriamente.
+                                        </p>
+                                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                                            <i class="pi pi-sparkles text-white mr-3"></i>
+                                            Randomizar Avatar
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="space-y-2">
                                         <div class="flex flex-col gap-2">
-                                            <label for="nome" class="text-primary-50 font-semibold">Nome</label>
+                                            <label for="nome" class="text-primary-50 font-semibold">Nome Completo</label>
                                             <input pInputText  class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50" 
                                                 formControlName="nome" id="nome" >
                                         </div>
@@ -65,16 +65,87 @@
                                                 formControlName="email" id="email" >
                                         </div>
                                     </div>
+                                    <div class="space-y-2">
+                                        <div class="flex flex-col gap-2">
+                                            <label for="nome_usuario" class="text-primary-50 font-semibold">Nome do usuário</label>
+                                            <input pInputText  class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50" 
+                                                formControlName="nome_usuario" id="nome_usuario" >
+                                        </div>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex justify-end mt-8"> 
-                        <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary hover:bg-primary/90 h-10 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white">
-                            <i class="pi pi-save mr-3"></i>
-                            Salvar Alterações
-                        </button>
-                    </div>
+                        @if(alterPassword){
+                        <div class="rounded-xl mt-2 border border-white/10 bg-white/5 backdrop-blur-lg text-slate-50 shadow-sm">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <h3 class="text-lg font-semibold leading-none tracking-tight flex items-center gap-3">
+                                    <i class="pi pi-user text-purple-400"></i>
+                                    Alterar Senha
+                                </h3>
+                                <p class="text-sm text-slate-400">
+                                    Atualize sua senha.
+                                </p>
+                            </div>
+                            <div class="p-6 space-y-6">
+                                <div class="grid gap-4">
+                                    <div class="flex flex-col col-span-2 gap-2">
+                                        <label for="senha" class="text-primary-50 font-semibold">
+                                            <i class="pi pi-lock mr-2"></i>Senha Atual
+                                        </label>
+                                        <div class="relative w-full">
+                                            <input pInputText class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50 w-full pr-10" 
+                                                formControlName="senha_atual" id="password" [type]="senhaVisivel ? 'text' : 'password'" >
+                                            <i class="pi absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" 
+                                                [class.pi-eye]="!senhaVisivel" 
+                                                [class.pi-eye-slash]="senhaVisivel"
+                                                (click)="toggleSenhaVisivel()"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col col-span-1 gap-2">
+                                        <label for="nova_senha" class="text-primary-50 font-semibold">
+                                            <i class="pi pi-lock mr-2"></i>Nova senha
+                                        </label>
+                                        <div class="relative w-full">
+                                            <input pInputText class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50 w-full pr-10" 
+                                                formControlName="nova_senha" id="password" [type]="senhaVisivel ? 'text' : 'password'" >
+                                            <i class="pi absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" 
+                                                [class.pi-eye]="!senhaVisivel" 
+                                                [class.pi-eye-slash]="senhaVisivel"
+                                                (click)="toggleSenhaVisivel()"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col col-span-1 gap-2">
+                                        <label for="nova_senha_confirmation" class="text-primary-50 font-semibold">
+                                            <i class="pi pi-lock mr-2"></i>Confirmação de senha
+                                        </label>
+                                        <div class="relative w-full">
+                                            <input pInputText class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50 w-full pr-10" 
+                                                formControlName="nova_senha_confirmation" id="nova_senha_confirmation" [type]="senhaVisivel ? 'text' : 'password'" >
+                                            <i class="pi absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" 
+                                                [class.pi-eye]="!senhaVisivel" 
+                                                [class.pi-eye-slash]="senhaVisivel"
+                                                (click)="toggleSenhaVisivel()"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end mt-8"> 
+                                    <button (click)="saveNewPassword()" class="btn-primary">
+                                        <i class="pi pi-check mr-3"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        <div class="flex justify-end mt-8"> 
+                            <button (click)="this.alterPassword = !this.alterPassword" class="btn-primary mr-3">
+                                Alterar senha
+                            </button>
+                            <button type="submit" class="btn-secondary hover:bg-primary/90 !from-purple-500 !to-pink-500 hover:opacity-90">
+                                <i class="pi pi-save mr-3"></i>
+                                Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
                 </p-tabpanel>
                 <p-tabpanel [value]="1">
                     <p class="m-0">
