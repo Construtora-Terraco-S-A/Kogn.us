@@ -10,12 +10,12 @@ export const routes: Routes = [
     {
         path: '',
         component: Home,
-        title: 'Home Page'
+        title: 'Explorar'
     },
     {
         path: 'register',
         component: Register,
-        title: 'Register'
+        title: 'Registro'
     },
     {
         path: 'notauthorized',
@@ -27,13 +27,13 @@ export const routes: Routes = [
     {
         path: 'generate-content',
         component: GenerateContent,
-        title: 'Generate Content',
+        title: 'Gerar Conteúdo',
         canActivate: [AuthGuard]
     },
     {
         path: 'settings',
         component: Settings,
-        title: 'Settings',
+        title: 'Configurações',
         canActivate: [AuthGuard]
     }
 ];
