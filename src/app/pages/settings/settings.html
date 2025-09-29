@@ -122,9 +122,9 @@
                                             <input pInputText class="!bg-white/20 !border-0 rounded-xl !p-2 !text-primary-50 w-full pr-10" 
                                                 formControlName="nova_senha_confirmation" id="nova_senha_confirmation" [type]="senhaVisivel ? 'text' : 'password'" >
                                             <i class="pi absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" 
-                                                [class.pi-eye]="!senhaVisivel" 
-                                                [class.pi-eye-slash]="senhaVisivel"
-                                                (click)="toggleSenhaVisivel()"></i>
+                                                [class.pi-eye]="!confirmacaoSenhaVisivel" 
+                                                [class.pi-eye-slash]="confirmacaoSenhaVisivel"
+                                                (click)="toggleConfirmacaoSenhaVisivel()"></i>
                                         </div>
                                     </div>
                                 </div>

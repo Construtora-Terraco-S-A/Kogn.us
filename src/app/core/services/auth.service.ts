@@ -30,6 +30,12 @@ export class AuthService implements OnDestroy {
     window.removeEventListener('storage', this.syncAuthStatus.bind(this));
   }
 
+  private syncAuthStatus(event: StorageEvent): void {
+    if (event.key === 'session') {
+      this.isAuthenticatedSignal.set(!!event.newValue);
+    }
+  }
+
   login(usuario: string, senha: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/login`, { usuario, senha }).pipe(
       tap((response: any) => {
@@ -69,10 +75,49 @@ export class AuthService implements OnDestroy {
     });
   }
   
-  private syncAuthStatus(event: StorageEvent): void {
-    if (event.key === 'session') {
-      this.isAuthenticatedSignal.set(!!event.newValue);
+  public getCurrentUser(): any | null {
+    const session = localStorage.getItem('session');
+    if (session) {
+      const parsedSession = JSON.parse(session);
+      return parsedSession?.usuario || null;
     }
+    return null;
   }
+
+  resendVerificationEmail(email: string): Observable<any> {
+    if (!email) {
+      const errorMsg = 'E-mail não fornecido.';
+      this.loadingService.toastr("Erro!", errorMsg, "error");
+      return throwError(() => new Error(errorMsg));
+    }
+
+    return this.http.post(`${this.baseUrl}/email/reenviar`, { email }).pipe(
+      catchError((error) => {
+        console.error("Erro ao reenviar e-mail de verificação:", error);
+        this.loadingService.toastr("Erro!", error.error.message || "Ocorreu um erro ao reenviar o e-mail.", "error");
+        return throwError(() => error);
+      })
+    );
+  }
+
+  verifyEmail(token: string, email: string): Observable<any> {
+    const options = {
+      params: { token, email }
+    };
+    return this.http.get(`${this.baseUrl}/email/verificar`,  options ).pipe(
+      tap((response: any) => {
+        if (typeof localStorage !== 'undefined') { // Verifica se está no navegador
+          localStorage.setItem('session', JSON.stringify(response));
+          this.cookieService.set('token', encodeURIComponent(response.token), { path: '/' });
+          this.isAuthenticatedSignal.set(true); // Atualiza o signal
+        }
+      }),
+      catchError((error) => {
+        console.error("Erro na verificação de e-mail:", error);
+        return throwError(() => error); 
+      })
+    );
+  }
+
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { RegisterService } from './register.service';
-import { LoadingService } from '../../core';
+import { AuthService, LoadingService } from '../../core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
@@ -29,6 +29,7 @@ export class Register implements OnInit, AfterViewInit {
   public registerForm: FormGroup;
   public registerFormSubmitted: boolean = false;
   public loadingMessage: string | null = null;
+  public registrationComplete: boolean = false;
 
   senhaVisivel: boolean = false;
   confirmacaoSenhaVisivel: boolean = false;
@@ -41,7 +42,7 @@ export class Register implements OnInit, AfterViewInit {
     private registerService: RegisterService,
     private readonly loadingService: LoadingService,
     private cd: ChangeDetectorRef,
-    private router: Router
+    private authService: AuthService
   ) {
     this.registerForm = new FormGroup({
       nome: new FormControl('', [Validators.required]),
@@ -145,8 +146,7 @@ export class Register implements OnInit, AfterViewInit {
             this.finalizeRegistration(finalizationData);
         } else {
             this.loadingMessage = null;
-            this.loadingService.toastr('Sucesso!', response.message || 'Registro realizado com sucesso!', 'success');
-            this.router.navigate(['/login']);
+            this.registrationComplete = true;
         }
       },
       error: (err) => {
@@ -188,8 +188,7 @@ export class Register implements OnInit, AfterViewInit {
     this.registerService.finalizeRegister(finalizationData).subscribe({
         next: (res: any) => {
             this.loadingMessage = null;
-            this.loadingService.toastr('Sucesso!', res.message || 'Registro finalizado com sucesso!', 'success');
-            this.router.navigate(['/login']);
+            this.registrationComplete = true;
         },
         error: (err: any) => {
             this.loadingMessage = null;
@@ -197,6 +196,24 @@ export class Register implements OnInit, AfterViewInit {
             this.loadingService.toastr('Erro!', errorMessage, 'error');
             console.error(err);
         }
+    });
+  }
+
+  onResendVerificationEmail(): void {
+    const email = this.registerForm.get('email')?.value;
+    if (!email) {
+        this.loadingService.toastr('Erro!', 'E-mail não encontrado no formulário.', 'error');
+        return;
+    }
+    this.loadingService.show();
+    this.authService.resendVerificationEmail(email).subscribe({
+      next: (response: any) => {
+        this.loadingService.hide();
+        this.loadingService.toastr('Sucesso!', response.message || 'E-mail de verificação reenviado com sucesso!', 'success');
+      },
+      error: () => {
+        this.loadingService.hide();
+      }
     });
   }
 

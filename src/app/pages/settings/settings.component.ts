@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { TabsModule } from 'primeng/tabs';
 import { SettingsService } from './settings.service';
-import { LoadingService } from '../../core';
+import { AuthService, LoadingService } from '../../core';
 
 @Component({
   selector: 'app-settings',
@@ -33,7 +33,8 @@ export class Settings implements OnInit{
 
   constructor(
     private settingsService: SettingsService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private authService: AuthService
   ) {
     this.userForm = new FormGroup({
       nome: new FormControl('', [Validators.required]),
@@ -59,7 +60,6 @@ export class Settings implements OnInit{
     if (this.userForm.invalid) {
       return; 
     }
-    this.alterPassword = true;
     const body = {
       senha_atual: this.userForm.value.senha_atual,
       nova_senha: this.userForm.value.nova_senha,
@@ -68,7 +68,6 @@ export class Settings implements OnInit{
 
     this.settingsService.atualizarSenha(body).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.loadingService.toastr('Sucesso!', response.message || 'Senha alterada com sucesso!', 'success');
         this.alterPassword = false;
         this.userForm.reset();
@@ -84,11 +83,12 @@ export class Settings implements OnInit{
   }
   
 
-  public dados(): any {
-    const session = JSON.parse(localStorage.getItem('session') ?? '{}');
-    const user = session?.usuario || {};
-    this.me = user;
-    return this.setValueDados()
+  public dados(): void {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.me = user;
+      this.setValueDados();
+    }
   }
 
   public setValueDados(): void {

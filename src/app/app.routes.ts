@@ -1,5 +1,11 @@
 import { Routes } from '@angular/router';
-import { GenerateContent, Home, Register } from './pages';
+import { 
+    Home,
+    Register,
+    GenerateContent,
+    VerifyEmailComponent,
+    LoginComponent
+} from './pages';
 import { AuthGuard } from './core';
 import { NotAuthorized } from './pages/not-authorized/not-authorized.component';
 import { Settings } from './pages/settings';
@@ -13,9 +19,19 @@ export const routes: Routes = [
         title: 'Explorar'
     },
     {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Login'
+    },
+    {
         path: 'register',
         component: Register,
         title: 'Registro'
+    },
+    {
+        path: 'email/verificar',
+        component: VerifyEmailComponent,
+        title: 'Verificar E-mail'
     },
     {
         path: 'notauthorized',

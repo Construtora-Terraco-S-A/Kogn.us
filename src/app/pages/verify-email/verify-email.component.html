@@ -1,0 +1,14 @@
+<div class="flex flex-col items-center justify-center text-center h-screen text-primary-50">
+  @if (message) {
+    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    <p class="mt-4 text-xl">{{ message }}</p>
+  }
+
+  @if (error) {
+    <div class="p-4 bg-red-200 text-red-800 rounded-lg">
+      <p class="text-xl font-bold">Erro na Verificação</p>
+      <p>{{ error }}</p>
+      <a routerLink="/" class="underline mt-4 inline-block">Voltar para a página inicial</a>
+    </div>
+  }
+</div>
